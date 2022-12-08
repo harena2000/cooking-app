@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "263402261874",
+    "project_id": "cooking-chef-60b60",
+    "storage_bucket": "cooking-chef-60b60.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:263402261874:android:1ff286f5b906505f54a1eb",
+        "android_client_info": {
+          "package_name": "com.example.cooking_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "263402261874-sc2bhml3ag2bs9e9p7jd16510o1ae9p7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCQV_NlHNY8Y9UJ-GFVo3mwqr_L1ABBI5s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "263402261874-sc2bhml3ag2bs9e9p7jd16510o1ae9p7.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
