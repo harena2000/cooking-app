@@ -1,5 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cooking_app/page/auth/login_page.dart';
-import 'package:cooking_app/utils/shared_preferences_utils.dart';
 import 'package:cooking_app/widget/button/custom_button.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -14,10 +14,13 @@ class MorePage extends StatefulWidget {
 class _MorePageState extends State<MorePage> {
 
   final _auth = FirebaseAuth.instance;
+  final firestore = FirebaseFirestore.instance;
 
-  void _setUID() async {
-    SharedPreferencesUtils preferencesUtils = SharedPreferencesUtils.instance;
-    await preferencesUtils.setStringValue("uID", "");
+  void _changeStatus() async {
+    await firestore
+        .collection("users")
+        .doc(_auth.currentUser!.uid)
+        .update({"status": false});
   }
 
   @override
@@ -28,8 +31,8 @@ class _MorePageState extends State<MorePage> {
           CustomButton(
             text: "Log Out",
             onClick: (){
+              _changeStatus();
               _auth.signOut();
-              _setUID();
               Navigator.push(context, MaterialPageRoute(builder: (context) => const LoginPage()));
             }
           )

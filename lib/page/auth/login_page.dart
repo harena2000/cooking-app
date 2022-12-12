@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:animate_do/animate_do.dart';
 import 'package:cooking_app/const/color.dart';
-import 'package:cooking_app/method/auth_method.dart';
+import 'package:cooking_app/service/auth_method.dart';
 import 'package:cooking_app/page/auth/registration_page.dart';
 import 'package:cooking_app/page/main_page.dart';
 import 'package:cooking_app/utils/shared_preferences_utils.dart';

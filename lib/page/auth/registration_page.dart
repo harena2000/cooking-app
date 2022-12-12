@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:animate_do/animate_do.dart';
 import 'package:cooking_app/const/color.dart';
-import 'package:cooking_app/method/auth_method.dart';
+import 'package:cooking_app/service/auth_method.dart';
 import 'package:cooking_app/page/auth/login_page.dart';
 import 'package:cooking_app/page/main_page.dart';
 import 'package:cooking_app/widget/button/custom_outlined_button.dart';

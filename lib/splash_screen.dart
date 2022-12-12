@@ -45,7 +45,7 @@ class _SplashScreenState extends State<SplashScreen> {
         context,
         MaterialPageRoute(
             builder: (context) =>
-              !isFirstRun
+              isFirstRun
                   ? (!isConnected ? const LoginPage() : const MainPage())
                   : const GetStarted()
 

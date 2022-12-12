@@ -67,7 +67,7 @@ class _ColumnDescriptionCardState extends State<ColumnDescriptionCard> {
                       CustomText(
                         text: widget.imageTitle!,
                         size: 15,
-                        color: AppColor.dark,
+                        color: Colors.white,
                         bold: true,
                         overflow: TextOverflow.fade,
                       ),
@@ -84,7 +84,7 @@ class _ColumnDescriptionCardState extends State<ColumnDescriptionCard> {
                                   size: 12,
                                   softWrap: true,
                                   overflow: TextOverflow.fade,
-                                  color: AppColor.lightGrey),
+                                  color: AppColor.grey),
                               const SizedBox(
                                 width: 5,
                               ),
@@ -102,7 +102,7 @@ class _ColumnDescriptionCardState extends State<ColumnDescriptionCard> {
                                   size: 12,
                                   softWrap: true,
                                   overflow: TextOverflow.fade,
-                                  color: AppColor.lightGrey),
+                                  color: AppColor.grey),
                             ],
                           ),
                           Row(

@@ -47,7 +47,6 @@ class BestFoodList extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListView.builder(
         scrollDirection: Axis.horizontal,
-        reverse: true,
         physics: const BouncingScrollPhysics(),
         itemCount: data.length,
         itemBuilder: (BuildContext context, int index) {

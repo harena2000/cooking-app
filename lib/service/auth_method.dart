@@ -16,6 +16,7 @@ Future<UserCredential?> createAccount(String name, String email, String password
         "name": name,
         "email": email,
         "date_time": DateTime.now(),
+        "status" : true
       });
 
       return user;

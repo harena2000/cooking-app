@@ -23,6 +23,8 @@ class SecondPage extends StatelessWidget {
           width: MediaQuery.of(context).size.width - 100,
           child: const CustomText(
               text: "Cooking Experience Like a Chef",
+              softWrap: false,
+              overflow: TextOverflow.visible,
               size: 45,
               color: Colors.white,
               bold: true),
@@ -36,7 +38,10 @@ class SecondPage extends StatelessWidget {
               height: 1.8,
               size: 14,
               color: Colors.grey,
-              bold: false),
+              bold: false,
+              softWrap: false,
+              overflow: TextOverflow.visible,
+          ),
         )
       ],
     );

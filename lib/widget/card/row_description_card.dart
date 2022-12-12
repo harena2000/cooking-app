@@ -77,7 +77,7 @@ class _RowDescriptionCardState extends State<RowDescriptionCard> {
                               child: CustomText(
                                 text: widget.imageTitle ?? "Image Title",
                                 size: 15,
-                                color: AppColor.dark,
+                                color: Colors.white,
                                 bold: true,
                                 overflow: TextOverflow.fade,
                               ),
@@ -94,7 +94,7 @@ class _RowDescriptionCardState extends State<RowDescriptionCard> {
                               CustomText(
                                   text: widget.category ?? "Dessert",
                                   size: 12,
-                                  color: AppColor.lightGrey),
+                                  color: AppColor.grey),
                               const SizedBox(
                                 width: 5,
                               ),
@@ -110,7 +110,7 @@ class _RowDescriptionCardState extends State<RowDescriptionCard> {
                               CustomText(
                                   text: widget.area ?? "Madagascar",
                                   size: 12,
-                                  color: AppColor.lightGrey),
+                                  color: AppColor.grey),
                             ],
                           ),
                         ],

@@ -25,15 +25,18 @@ class ImageButton extends StatefulWidget {
 class _ImageButtonState extends State<ImageButton> {
   @override
   Widget build(BuildContext context) {
-    return MaterialButton(
-      color: widget.backgroundColor ?? AppColor.grey,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(50),
-        ),
+    return ElevatedButton(
+      style: ButtonStyle(
+        backgroundColor: MaterialStateProperty.all(widget.backgroundColor ?? Colors.white.withOpacity(0.1)),
+        shape: MaterialStateProperty.all(RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(100),
+        ),),
+        elevation: MaterialStateProperty.all(0)
+      ),
         onPressed: () => widget.onClick(),
-        elevation: 0,
         child: SizedBox(
-          height: 50,
+          width : 50,
+          height : 50,
           child: Center(
             child: FaIcon(
               widget.image,

@@ -27,6 +27,8 @@ class FirstPage extends StatelessWidget {
               text: "Cooking Experience Like a Chef",
               size: 45,
               color: Colors.white,
+              softWrap: false,
+              overflow: TextOverflow.visible,
               bold: true
           ),
         ),
@@ -35,6 +37,8 @@ class FirstPage extends StatelessWidget {
           width: MediaQuery.of(context).size.width - 100,
           child: const CustomText(
               text: "Let's make a delicious dish with the best recipe for the family",
+              softWrap: false,
+              overflow: TextOverflow.visible,
               height: 1.8,
               size: 14,
               color: Colors.grey,

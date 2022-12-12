@@ -38,7 +38,7 @@ class _CustomTextState extends State<CustomText> {
       softWrap: widget.softWrap,
       style: TextStyle(
         fontSize: widget.size ?? 13,
-        color: widget.color ?? AppColor.dark,
+        color: widget.color ?? Colors.white,
         fontWeight: widget.bold! ? FontWeight.bold : FontWeight.normal,
         fontFamily: "Poppins",
       ),

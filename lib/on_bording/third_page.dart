@@ -22,6 +22,8 @@ class ThirdPage extends StatelessWidget {
           margin: const EdgeInsets.only(top: 35),
           width: MediaQuery.of(context).size.width - 100,
           child: const CustomText(
+              softWrap: false,
+              overflow: TextOverflow.visible,
               text: "Cooking Experience Like a Chef",
               size: 45,
               color: Colors.white,
@@ -31,6 +33,8 @@ class ThirdPage extends StatelessWidget {
           margin: const EdgeInsets.only(top: 10),
           width: MediaQuery.of(context).size.width - 100,
           child: const CustomText(
+              softWrap: false,
+              overflow: TextOverflow.visible,
               text:
                   "Let's make a delicious dish with the best recipe for the family",
               height: 1.8,

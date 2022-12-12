@@ -1,3 +1,7 @@
+import 'dart:async';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:cooking_app/page/nav_page/home_page.dart';
 import 'package:cooking_app/page/nav_page/menu_page.dart';
 import 'package:cooking_app/page/nav_page/more_page.dart';
@@ -7,7 +11,9 @@ import 'package:cooking_app/widget/button/nav_button.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
 
+import '../widget/dialog/message_dialog.dart';
 import 'users_page.dart';
 import '../const/color.dart';
 
@@ -18,7 +24,7 @@ class MainPage extends StatefulWidget {
   State<MainPage> createState() => _MainPageState();
 }
 
-class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
+class _MainPageState extends State<MainPage> with TickerProviderStateMixin,WidgetsBindingObserver {
   int currentTab = 0;
 
   List<Widget> screens = const [
@@ -37,23 +43,79 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
 
   var prefs = SharedPreferencesUtils.instance;
   final _auth = FirebaseAuth.instance;
+  final firestore = FirebaseFirestore.instance;
 
   bool homeToggle = true;
 
   late bool menuToggle,otherToggle,profileToggle,moreToggle = false;
 
-  _uID() async{
-    var uID = "";
-    await prefs.setStringValue("uID", uID);
+  late StreamSubscription subscription;
+  var isDeviceConnected = false;
+  bool isAlertSet = false;
+
+  void setStatus(bool status) async {
+    await firestore
+        .collection("users")
+        .doc(_auth.currentUser!.uid)
+        .update({"status": status});
   }
+
+  getConnectivity() =>
+      subscription = Connectivity().onConnectivityChanged.listen((ConnectivityResult result) async {
+          isDeviceConnected = await InternetConnectionChecker().hasConnection;
+          if(!isDeviceConnected && isAlertSet == false) {
+            showDialogBox();
+            setState(() => isAlertSet = true);
+            setStatus(false);
+          } else {
+            print("Connected");
+          }
+      });
+
+  showDialogBox() => showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (context) =>
+          MessageDialog(
+            text:
+            "No Internet!",
+            color: Colors.red,
+            changeScreen: false,
+            doOtherAction: true,
+            otherAction: () async {
+              Navigator.pop(context, "Cancel");
+              setState(() => isAlertSet = false);
+              setStatus(true);
+              isDeviceConnected = await InternetConnectionChecker().hasConnection;
+              if(!isDeviceConnected) {
+                showDialogBox();
+                setState(() => isAlertSet = true);
+                setStatus(false);
+              }
+            },
+          ));
 
   @override
   void initState() {
+    getConnectivity();
+
     super.initState();
     animationAndController();
 
-    _uID();
+    WidgetsBinding.instance.addObserver(this);
+    setStatus(true);
 
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+
+    if(state == AppLifecycleState.resumed) {
+      setStatus(true);
+    } else {
+      setStatus(false);
+    }
   }
 
   void animationAndController() {
@@ -73,6 +135,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
 
   @override
   void dispose() {
+    subscription.cancel();
     controller.dispose();
     super.dispose();
   }
@@ -80,6 +143,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        backgroundColor: AppColor.darkBlue,
         body: PageStorage(
           bucket: bucket,
           child: currentScreen,
@@ -103,9 +167,10 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
           ),
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-        bottomNavigationBar: Container(
+        bottomNavigationBar: SizedBox(
           height: 75,
           child: BottomAppBar(
+            color: AppColor.darkBlue,
             shape: const CircularNotchedRectangle(),
             notchMargin: 15,
             elevation: 30,
@@ -185,6 +250,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
               ),
             ),
           ),
-        ));
+        )
+    );
   }
 }

@@ -9,15 +9,26 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../../const/color.dart';
 
 class MessageDialog extends StatefulWidget {
-
   final IconData? dialogIcon;
   final String text;
   final String? textButton;
   final Color? color;
   final Widget? redirectTo;
   final bool? changeScreen;
+  final bool? doOtherAction;
+  final Function()? otherAction;
 
-  const MessageDialog({Key? key, this.dialogIcon, required this.text, this.textButton, this.color, this.changeScreen = false, this.redirectTo}) : super(key: key);
+  const MessageDialog(
+      {Key? key,
+      this.dialogIcon,
+      required this.text,
+      this.textButton,
+      this.color,
+      this.changeScreen = false,
+      this.redirectTo,
+      this.otherAction,
+      this.doOtherAction = false})
+      : super(key: key);
 
   @override
   State<MessageDialog> createState() => _MessageDialogState();
@@ -31,9 +42,7 @@ class _MessageDialogState extends State<MessageDialog> {
       child: AlertDialog(
         clipBehavior: Clip.antiAlias,
         backgroundColor: AppColor.darkBlue,
-        shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(30)
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
         icon: Center(
           child: Container(
             alignment: Alignment.center,
@@ -41,11 +50,16 @@ class _MessageDialogState extends State<MessageDialog> {
             width: 70,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(50),
-              border: Border.all(width: 2, color: widget.color ?? AppColor.orange),
+              border:
+                  Border.all(width: 2, color: widget.color ?? AppColor.orange),
             ),
             child: Padding(
               padding: const EdgeInsets.all(10),
-              child: FaIcon(FontAwesomeIcons.check, color: widget.color ?? AppColor.orange, size: 30,),
+              child: FaIcon(
+                FontAwesomeIcons.check,
+                color: widget.color ?? AppColor.orange,
+                size: 30,
+              ),
             ),
           ),
         ),
@@ -69,10 +83,14 @@ class _MessageDialogState extends State<MessageDialog> {
           CustomOutlinedButton(
             onClick: () {
               !widget.changeScreen!
-                  ? Navigator.pop(context)
-                  : Navigator.push(context, MaterialPageRoute(
-                  builder: (context) => widget.redirectTo ?? const MainPage()
-              ));
+                  ? (!widget.doOtherAction!
+                      ? Navigator.pop(context)
+                      : widget.otherAction)
+                  : Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              widget.redirectTo ?? const MainPage()));
             },
             duration: 50,
             text: "Ok",
