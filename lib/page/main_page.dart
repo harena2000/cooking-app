@@ -8,6 +8,7 @@ import 'package:cooking_app/page/nav_page/more_page.dart';
 import 'package:cooking_app/page/nav_page/others_page.dart';
 import 'package:cooking_app/utils/shared_preferences_utils.dart';
 import 'package:cooking_app/widget/button/nav_button.dart';
+import 'package:cooking_app/widget/dialog/error_message_dialog.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -76,14 +77,11 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin,Widge
       barrierDismissible: false,
       context: context,
       builder: (context) =>
-          MessageDialog(
-            text:
-            "No Internet!",
+          ErrorMessageDialog(
+            text: "No Internet!",
             color: Colors.red,
-            changeScreen: false,
-            doOtherAction: true,
-            otherAction: () async {
-              Navigator.pop(context, "Cancel");
+            onClick: () async {
+              Navigator.pop(context);
               setState(() => isAlertSet = false);
               setStatus(true);
               isDeviceConnected = await InternetConnectionChecker().hasConnection;

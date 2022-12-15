@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cooking_app/service/cloud_storage_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -13,29 +14,21 @@ class UserProfileBuilder extends StatefulWidget {
 class _UserProfileBuilderState extends State<UserProfileBuilder> {
   late final CloudStorageService storage = CloudStorageService();
   late final _auth = FirebaseAuth.instance;
+  late final firestore = FirebaseFirestore.instance;
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-        future: storage.profileImage(_auth.currentUser!.uid),
+        future: firestore.collection("users").doc(_auth.currentUser!.uid).get(),
         builder: (context, snapshot){
           if(snapshot.connectionState == ConnectionState.done && snapshot.hasData){
 
-            print(snapshot.data);
-
-            if(snapshot.data!.isEmpty) {
-              return const Image(
-                  image: AssetImage("assets/images/profile.jpg"),
-                  fit: BoxFit.cover);
-            } else {
               return Image.network(
-                snapshot.data!,
+                snapshot.data!['image_profile'],
                 fit: BoxFit.cover,
               );
-            }
           }
-          if(snapshot.connectionState == ConnectionState.waiting || !snapshot.hasData) {
-            print(snapshot.data);
+          else if(snapshot.connectionState == ConnectionState.waiting || !snapshot.hasData) {
             return const CircularProgressIndicator();
           }
 

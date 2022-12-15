@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cooking_app/const/color.dart';
 import 'package:cooking_app/page/chat_page.dart';
-import 'package:cooking_app/page/nav_page/profile_page.dart';
+import 'package:cooking_app/page/profile_page.dart';
 import 'package:cooking_app/utils/shared_preferences_utils.dart';
 import 'package:cooking_app/widget/text/custom_text.dart';
 import 'package:cooking_app/widget/text_field/custom_text_field.dart';
@@ -51,7 +51,6 @@ class _HomePageState extends State<HomePage>{
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Expanded(
-                        flex: 6,
                         child: CustomTextField(
                             backgroundColor: Colors.white.withOpacity(0.1),
                             hintText: "Search food",
@@ -59,7 +58,9 @@ class _HomePageState extends State<HomePage>{
                     const SizedBox(
                       width: 5,
                     ),
-                    Expanded(
+                    SizedBox(
+                      width: 50,
+                      height: 50,
                       child: ImageButton(
                         onClick: () {
                           Navigator.pushReplacement(

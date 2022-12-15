@@ -1,0 +1,125 @@
+import 'package:animate_do/animate_do.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cooking_app/model/user_model.dart';
+import 'package:cooking_app/provider/add_member_provider.dart';
+import 'package:cooking_app/widget/button/custom_button.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
+
+import '../const/color.dart';
+import '../page/chat_page.dart';
+import '../widget/button/image_button.dart';
+import '../widget/message/image_status.dart';
+import '../widget/others/notification_badge.dart';
+import '../widget/text/custom_text.dart';
+
+class AddUserBuilder extends StatefulWidget {
+  final String? search;
+
+  const AddUserBuilder({Key? key, this.search = ""}) : super(key: key);
+
+  @override
+  State<AddUserBuilder> createState() => _AddUserBuilderState();
+}
+
+class _AddUserBuilderState extends State<AddUserBuilder> {
+  final firestore = FirebaseFirestore.instance;
+  final _auth = FirebaseAuth.instance;
+  var currentEmail = "";
+  late Widget listOfUser;
+
+  var user = UserModel(id: "", name: "", profile: "", email: "", status: false);
+
+  @override
+  void initState() {
+    super.initState();
+
+    currentEmail = _auth.currentUser!.email!;
+    listOfUser = Container();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder(
+        stream: firestore.collection("users").snapshots(),
+        builder: (context, snapshot) {
+          List data = !snapshot.hasData
+              ? []
+              : snapshot.data!.docs
+              .where((element) =>
+          (element['email'].toString() != currentEmail) &&
+              (element['email'].toString().contains(widget.search!) ||
+                  element['name'].toString().contains(widget.search!)))
+              .toList();
+
+          return snapshot.hasData
+              ? ListView.builder(
+            scrollDirection: Axis.vertical,
+            itemCount: data.length,
+            itemBuilder: (context, index) {
+
+              user = UserModel(
+                  id: snapshot.data!.docs[index].id,
+                  name: data[index]['name'],
+                  profile: data[index]['image_profile'],
+                  email: data[index]['email'],
+                  status: data[index]['status']
+              );
+
+              if (!(Provider.of<GroupMember>(context).member.containsKey(snapshot.data!.docs[index].id))) {
+                print(Provider.of<GroupMember>(context).member);
+                return Card(
+                    elevation: 0,
+                    color: Colors.white.withOpacity(0.1),
+                    clipBehavior: Clip.antiAlias,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20)),
+                    child: Padding(
+                      padding: const EdgeInsets.all(10),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          ImageStatus(
+                            status: user.status!,
+                            imageUrl: user.profile!,
+                          ),
+                          const SizedBox(
+                            width: 10,
+                          ),
+                          Expanded(
+                            flex: 2,
+                            child: CustomText(
+                              overflow: TextOverflow.fade,
+                              text: user.name!,
+                              bold: true,
+                              size: 14,
+                            ),
+                          ),
+                          CustomButton(
+                            text: 'Add +',
+                            size: 10,
+                            onClick: () {
+                              Provider.of<GroupMember>(context,
+                                  listen: false)
+                                  .addMember(snapshot.data!.docs[index].id, user);
+                            },
+                          )
+                        ],
+                      ),
+                    ));
+              }
+              else {
+                print(Provider.of<GroupMember>(context).member);
+              }
+
+              return listOfUser;
+            },
+          )
+              : const CircularProgressIndicator();
+        });
+    ;
+  }
+}

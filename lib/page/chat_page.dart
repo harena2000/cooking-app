@@ -1,20 +1,15 @@
 import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:cooking_app/page/main_page.dart';
-import 'package:cooking_app/page/users_page.dart';
-import 'package:cooking_app/provider/friend_notifier.dart';
 import 'package:cooking_app/utils/message_stream.dart';
 import 'package:cooking_app/widget/button/image_button.dart';
+import 'package:cooking_app/widget/message/image_status.dart';
 import 'package:cooking_app/widget/text/custom_text.dart';
 import 'package:cooking_app/widget/text_field/sender_text_field.dart';
-import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:provider/provider.dart';
 import '../const/color.dart';
-import '../widget/message/sender_message_bubble.dart';
 
 class ChatPage extends StatefulWidget {
   final String id;
@@ -37,15 +32,10 @@ class _ChatPageState extends State<ChatPage> {
 
   var roomId;
 
-  final List<types.Message> _messages = [];
-  late final _user;
-
   @override
   void initState() {
     super.initState();
     getCurrentUser();
-
-    _user = types.User(id: loggedInUser.uid);
   }
 
   void getCurrentUser() async {
@@ -65,10 +55,33 @@ class _ChatPageState extends State<ChatPage> {
     return Scaffold(
       backgroundColor: AppColor.darkBlue,
       appBar: AppBar(
-        title:
+        leadingWidth: 30,
+        title: Row(
+          children: [
+            StreamBuilder(
+                stream: database.collection('users').snapshots(),
+                builder: (context, snapshot) {
+                  if(snapshot.hasData){
+                    var friendInfo = snapshot.data!.docs
+                        .where((element) => element.id == widget.id);
+
+                    return ImageStatus(
+                        statusSize: 8,
+                        radius: 20,
+                        status: friendInfo.first.data()['status'],
+                        imageUrl: friendInfo.first.data()['image_profile']);
+                  }
+
+                  return const CircularProgressIndicator();
+
+                }),
+            const SizedBox(width: 20,),
             CustomText(text: widget.chatname, bold: true, color: Colors.white),
+          ],
+        ),
         backgroundColor: AppColor.darkBlue,
         leading: GestureDetector(
+          behavior: HitTestBehavior.translucent,
           onTap: () {
             Navigator.pop(context);
           },
@@ -136,7 +149,6 @@ class _ChatPageState extends State<ChatPage> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Expanded(
-                      flex: 5,
                       child: SenderTextField(
                         backgroundColor: Colors.white.withOpacity(0.1),
                         controller: senderFormController,
@@ -147,48 +159,50 @@ class _ChatPageState extends State<ChatPage> {
                           messageText = value;
                         },
                       )),
-                  Expanded(
-                      child: Container(
+                  Container(
+                    width: 50,
+                    height: 50,
                     margin: const EdgeInsets.only(left: 5),
                     child: ImageButton(
-                      onClick: () {
-                        senderFormController.clear();
+                  onClick: () {
+                    senderFormController.clear();
 
-                        if (roomId != null) {
-                          Map<String, dynamic> data = {
-                            'message': messageText,
-                            'sent_by': _auth.currentUser!.uid,
-                            'datetime': DateTime.now()
-                          };
-                          database.collection('rooms').doc(roomId).update({
-                            'last_message': messageText,
-                            'last_message_time': DateTime.now()
-                          });
-
-                          database
-                              .collection('rooms')
-                              .doc(roomId)
-                              .collection('messages')
-                              .add(data);
-                        } else {
-                          Map<String, dynamic> data = {
-                            'message': messageText,
-                            'sent_by': _auth.currentUser!.uid,
-                            'datetime': DateTime.now()
-                          };
-                          database.collection('rooms').add({
-                            'users': [widget.id, _auth.currentUser!.uid],
-                            'last_message': messageText,
-                            'last_message_time': DateTime.now()
-                          }).then((value) =>
-                              value.collection('messages').add(data));
-                        }
-                      },
-                      image: FontAwesomeIcons.paperPlane,
-                      color: Colors.blue,
-                      size: 18,
+                    if (roomId != null) {
+                      Map<String, dynamic> data = {
+                        'message': messageText,
+                        'sent_by': _auth.currentUser!.uid,
+                        'datetime': DateTime.now(),
+                        'view': false
+                      };
+                      database.collection('rooms').doc(roomId).update({
+                        'last_message': messageText,
+                        'last_message_time': DateTime.now()
+                      });
+                      database
+                          .collection('rooms')
+                          .doc(roomId)
+                          .collection('messages')
+                          .add(data);
+                    } else {
+                      Map<String, dynamic> data = {
+                        'message': messageText,
+                        'sent_by': _auth.currentUser!.uid,
+                        'datetime': DateTime.now(),
+                        'view': false
+                      };
+                      database.collection('rooms').add({
+                        'users': [widget.id, _auth.currentUser!.uid],
+                        'last_message': messageText,
+                        'last_message_time': DateTime.now()
+                      }).then((value) =>
+                          value.collection('messages').add(data));
+                    }
+                  },
+                  image: FontAwesomeIcons.paperPlane,
+                  color: Colors.blue,
+                  size: 18,
                     ),
-                  ))
+                  )
                 ],
               )
             ],

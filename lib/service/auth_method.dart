@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cooking_app/service/cloud_storage_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -7,24 +8,27 @@ FirebaseAuth _auth = FirebaseAuth.instance;
 Future<UserCredential?> createAccount(String name, String email, String password) async {
 
   FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  CloudStorageService storageService = CloudStorageService();
 
   try{
-    final user = (await _auth.createUserWithEmailAndPassword(email: email, password: password));
-    if(user != null){
+    final user = await _auth.createUserWithEmailAndPassword(email: email, password: password);
 
-      await _firestore.collection("users").doc(_auth.currentUser!.uid).set({
-        "name": name,
-        "email": email,
-        "date_time": DateTime.now(),
-        "status" : true
-      });
+    final image = await storageService.createDirectory(_auth.currentUser!.uid);
 
-      return user;
-    } else {
-      return user;
-    }
+    print("Ito le sary *************\n $image **************\n");
+
+    await _firestore.collection("users").doc(_auth.currentUser!.uid).set({
+      "name": name,
+      "email": email,
+      "image_profile" : image,
+      "date_time": DateTime.now(),
+      "status" : true
+    });
+
+    return user;
+
   } catch (e) {
-    print("Something wrong!");
+    print(e);
     return null;
   }
 }

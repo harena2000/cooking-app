@@ -7,6 +7,7 @@ class ImageButton extends StatefulWidget {
   final IconData image;
   final double? size;
   final Color? color;
+  final double? buttonSize;
   final Color? backgroundColor;
 
   const ImageButton(
@@ -15,7 +16,7 @@ class ImageButton extends StatefulWidget {
         required this.image,
         this.size,
         this.color,
-        this.backgroundColor})
+        this.backgroundColor, this.buttonSize})
       : super(key: key);
 
   @override
@@ -25,25 +26,26 @@ class ImageButton extends StatefulWidget {
 class _ImageButtonState extends State<ImageButton> {
   @override
   Widget build(BuildContext context) {
-    return ElevatedButton(
-      style: ButtonStyle(
-        backgroundColor: MaterialStateProperty.all(widget.backgroundColor ?? Colors.white.withOpacity(0.1)),
-        shape: MaterialStateProperty.all(RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(100),
-        ),),
-        elevation: MaterialStateProperty.all(0)
-      ),
-        onPressed: () => widget.onClick(),
-        child: SizedBox(
-          width : 50,
-          height : 50,
+    return SizedBox(
+      width: widget.buttonSize ?? 50,
+      height: widget.buttonSize ?? 50,
+      child: ElevatedButton(
+        clipBehavior: Clip.antiAlias,
+        style: ButtonStyle(
+          backgroundColor: MaterialStateProperty.all(widget.backgroundColor ?? Colors.white.withOpacity(0.1)),
+          shape: MaterialStateProperty.all(RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(100),
+          ),),
+          elevation: MaterialStateProperty.all(0)
+        ),
+          onPressed: () => widget.onClick(),
           child: Center(
             child: FaIcon(
               widget.image,
               color: widget.color ?? AppColor.orange,
               size: widget.size ?? 15,
             ),
-          ),
-        ));
+          )),
+    );
   }
 }

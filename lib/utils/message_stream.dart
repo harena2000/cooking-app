@@ -60,13 +60,11 @@ class _MessageStreamState extends State<MessageStream> {
               itemCount: snap.data!.docs.length,
               reverse: true,
               itemBuilder: (context, int index) {
-                return Flexible(
-                  child: ConstrainedBox(
-                    constraints: const BoxConstraints(minWidth: 100),
-                    child: Container(
-                        margin: const EdgeInsets.only(top: 5),
-                        child: BounceInDown(child: messageBubble[index])),
-                  ),
+                return ConstrainedBox(
+                  constraints: const BoxConstraints(minWidth: 100),
+                  child: Container(
+                      margin: const EdgeInsets.only(top: 5),
+                      child: BounceInDown(child: messageBubble[index])),
                 );
               },
             );
