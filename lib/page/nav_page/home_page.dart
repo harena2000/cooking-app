@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cooking_app/const/color.dart';
-import 'package:cooking_app/page/chat_page.dart';
+import 'package:cooking_app/page/message/chat_page.dart';
 import 'package:cooking_app/page/profile_page.dart';
 import 'package:cooking_app/utils/shared_preferences_utils.dart';
 import 'package:cooking_app/widget/text/custom_text.dart';

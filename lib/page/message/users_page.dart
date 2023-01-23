@@ -8,8 +8,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-import '../const/color.dart';
-import '../widget/text_field/custom_text_field.dart';
+import '../../const/color.dart';
+import '../../widget/text_field/custom_text_field.dart';
 
 class UsersPage extends StatefulWidget {
   const UsersPage({Key? key}) : super(key: key);
@@ -53,6 +53,7 @@ class _UsersPageState extends State<UsersPage> {
                       child: CustomTextField(
                         hintText: "Search message...",
                         icon: FontAwesomeIcons.magnifyingGlass,
+                        textColor: Colors.white,
                         backgroundColor: Colors.white.withOpacity(0.1),
                         controller: controller,
                         onChange: (value) {
@@ -100,11 +101,10 @@ class _UsersPageState extends State<UsersPage> {
               barrierDismissible: false,
               context: context,
               builder: (BuildContext context) =>
-                  TextFieldDialog(
+                  const TextFieldDialog(
                     dialogIcon: FontAwesomeIcons.users,
                     text: "Create Chat Group",
                     color: Colors.blue,
-                    onClick: () => Navigator.pop(context),
                   )
           );
         },

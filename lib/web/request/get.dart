@@ -6,7 +6,6 @@ class Get {
   static Future<List<Recipe>> getListRecipeMeal() async {
     var dio = Dio();
     try {
-
       Response response = await dio
           .get(WebService.getUrl("search.php"), queryParameters: {"s": "a"});
       return (response.data['meals'] as List)

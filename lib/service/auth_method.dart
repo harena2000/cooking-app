@@ -15,8 +15,6 @@ Future<UserCredential?> createAccount(String name, String email, String password
 
     final image = await storageService.createDirectory(_auth.currentUser!.uid);
 
-    print("Ito le sary *************\n $image **************\n");
-
     await _firestore.collection("users").doc(_auth.currentUser!.uid).set({
       "name": name,
       "email": email,

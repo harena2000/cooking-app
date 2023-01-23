@@ -9,20 +9,20 @@ import 'package:cooking_app/widget/text_field/sender_text_field.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import '../const/color.dart';
+import '../../const/color.dart';
 
-class ChatPage extends StatefulWidget {
-  final String id;
+class GroupChatPage extends StatefulWidget {
+  final List<String> idList;
   final String chatname;
 
-  const ChatPage({Key? key, required this.id, required this.chatname})
+  const GroupChatPage({Key? key, required this.idList, required this.chatname})
       : super(key: key);
 
   @override
-  State<ChatPage> createState() => _ChatPageState();
+  State<GroupChatPage> createState() => _GroupChatPageState();
 }
 
-class _ChatPageState extends State<ChatPage> {
+class _GroupChatPageState extends State<GroupChatPage> {
   final _auth = FirebaseAuth.instance;
   final database = FirebaseFirestore.instance;
   late User loggedInUser;
@@ -61,9 +61,9 @@ class _ChatPageState extends State<ChatPage> {
             StreamBuilder(
                 stream: database.collection('users').snapshots(),
                 builder: (context, snapshot) {
-                  if(snapshot.hasData){
+                  if (snapshot.hasData) {
                     var friendInfo = snapshot.data!.docs
-                        .where((element) => element.id == widget.id);
+                        .where((element) => element['name'] == widget.chatname);
 
                     return ImageStatus(
                         statusSize: 8,
@@ -73,9 +73,10 @@ class _ChatPageState extends State<ChatPage> {
                   }
 
                   return const CircularProgressIndicator();
-
                 }),
-            const SizedBox(width: 20,),
+            const SizedBox(
+              width: 20,
+            ),
             CustomText(text: widget.chatname, bold: true, color: Colors.white),
           ],
         ),
@@ -111,7 +112,7 @@ class _ChatPageState extends State<ChatPage> {
                     if (snapshot.data!.docs.isNotEmpty) {
                       List<QueryDocumentSnapshot?> allData = snapshot.data!.docs
                           .where((element) =>
-                              element['users'].contains(widget.id) &&
+                              element['users'] == widget.idList &&
                               element['users'].contains(loggedInUser.uid))
                           .toList();
 
@@ -150,57 +151,42 @@ class _ChatPageState extends State<ChatPage> {
                 children: [
                   Expanded(
                       child: SenderTextField(
-                        backgroundColor: Colors.white.withOpacity(0.1),
-                        controller: senderFormController,
-                        textColor: Colors.white,
-                        hintText: 'Type your message',
-                        icon: FontAwesomeIcons.camera,
-                        onChange: (value) {
-                          messageText = value;
-                        },
-                      )),
+                    backgroundColor: Colors.white.withOpacity(0.1),
+                    controller: senderFormController,
+                    textColor: Colors.white,
+                    hintText: 'Type your message',
+                    icon: FontAwesomeIcons.camera,
+                    onChange: (value) {
+                      messageText = value;
+                    },
+                  )),
                   Container(
                     width: 50,
                     height: 50,
                     margin: const EdgeInsets.only(left: 5),
                     child: ImageButton(
-                  onClick: () {
-                    senderFormController.clear();
+                      onClick: () {
+                        senderFormController.clear();
 
-                    if (roomId != null) {
-                      Map<String, dynamic> data = {
-                        'message': messageText,
-                        'sent_by': _auth.currentUser!.uid,
-                        'datetime': DateTime.now(),
-                        'view': false
-                      };
-                      database.collection('rooms').doc(roomId).update({
-                        'last_message': messageText,
-                        'last_message_time': DateTime.now()
-                      });
-                      database
-                          .collection('rooms')
-                          .doc(roomId)
-                          .collection('messages')
-                          .add(data);
-                    } else {
-                      Map<String, dynamic> data = {
-                        'message': messageText,
-                        'sent_by': _auth.currentUser!.uid,
-                        'datetime': DateTime.now(),
-                        'view': false
-                      };
-                      database.collection('rooms').add({
-                        'users': [widget.id, _auth.currentUser!.uid],
-                        'last_message': messageText,
-                        'last_message_time': DateTime.now()
-                      }).then((value) =>
-                          value.collection('messages').add(data));
-                    }
-                  },
-                  image: FontAwesomeIcons.paperPlane,
-                  color: Colors.blue,
-                  size: 18,
+                        Map<String, dynamic> data = {
+                          'message': messageText,
+                          'sent_by': _auth.currentUser!.uid,
+                          'datetime': DateTime.now(),
+                          'view': false
+                        };
+                        database.collection('rooms').doc(roomId).update({
+                          'last_message': messageText,
+                          'last_message_time': DateTime.now()
+                        });
+                        database
+                            .collection('rooms')
+                            .doc(roomId)
+                            .collection('messages')
+                            .add(data);
+                      },
+                      image: FontAwesomeIcons.paperPlane,
+                      color: Colors.blue,
+                      size: 18,
                     ),
                   )
                 ],

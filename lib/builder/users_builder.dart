@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-import '../page/chat_page.dart';
+import '../page/message/chat_page.dart';
 import '../widget/message/image_status.dart';
 
 class UsersBuilder extends StatefulWidget {
@@ -57,9 +57,7 @@ class _UsersBuilderState extends State<UsersBuilder> {
                             context,
                             MaterialPageRoute(
                                 builder: (context) => ChatPage(
-                                  id: data[index]
-                                      .id
-                                      .toString(),
+                                  id: data[index].id.toString(),
                                   chatname: data[index]
                                   ['name'],
                                 )));

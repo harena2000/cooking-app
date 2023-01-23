@@ -1,24 +1,27 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cooking_app/model/user_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import '../const/color.dart';
-import '../page/chat_page.dart';
+import '../page/message/chat_page.dart';
+import '../page/message/group_chat_page.dart';
 import '../widget/message/image_status.dart';
 import '../widget/others/notification_badge.dart';
 import '../widget/text/custom_text.dart';
 
 class ContactMessageBuilder extends StatefulWidget {
-  const ContactMessageBuilder({Key? key}) : super(key: key);
+  final String? search;
+
+  const ContactMessageBuilder({Key? key, this.search = ""}) : super(key: key);
 
   @override
   State<ContactMessageBuilder> createState() => _ContactMessageBuilderState();
 }
 
 class _ContactMessageBuilderState extends State<ContactMessageBuilder> {
-
   final firestore = FirebaseFirestore.instance;
   final _auth = FirebaseAuth.instance;
   final controller = TextEditingController();
@@ -46,10 +49,9 @@ class _ContactMessageBuilderState extends State<ContactMessageBuilder> {
           List dataRooms = !snapshot.hasData
               ? []
               : snapshot.data!.docs
-              .where((element) => element['users']
-              .toString()
-              .contains(_auth.currentUser!.uid))
-              .toList();
+                  .where((element) =>
+                      element['users'].contains(_auth.currentUser!.uid))
+                  .toList();
 
           return snapshot.hasData
               ? Expanded(
@@ -178,10 +180,10 @@ class _ContactMessageBuilderState extends State<ContactMessageBuilder> {
                       }
                     });
 
-                return listOfUser;
-              },
-            ),
-          )
+                      return listOfUser;
+                    },
+                  ),
+                )
               : const CircularProgressIndicator();
         });
   }

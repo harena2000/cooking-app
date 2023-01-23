@@ -27,7 +27,7 @@ class FirstPage extends StatelessWidget {
               text: "Cooking Experience Like a Chef",
               size: 45,
               color: Colors.white,
-              softWrap: false,
+              softWrap: true,
               overflow: TextOverflow.visible,
               bold: true
           ),

@@ -32,7 +32,6 @@ class _SplashScreenState extends State<SplashScreen> {
     if(_auth.currentUser != null) {
       isConnected = true;
     }
-
   }
 
   startTimer() async {

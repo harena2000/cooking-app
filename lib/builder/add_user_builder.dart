@@ -10,7 +10,7 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import '../const/color.dart';
-import '../page/chat_page.dart';
+import '../page/message/chat_page.dart';
 import '../widget/button/image_button.dart';
 import '../widget/message/image_status.dart';
 import '../widget/others/notification_badge.dart';
@@ -31,8 +31,6 @@ class _AddUserBuilderState extends State<AddUserBuilder> {
   var currentEmail = "";
   late Widget listOfUser;
 
-  var user = UserModel(id: "", name: "", profile: "", email: "", status: false);
-
   @override
   void initState() {
     super.initState();
@@ -49,77 +47,76 @@ class _AddUserBuilderState extends State<AddUserBuilder> {
           List data = !snapshot.hasData
               ? []
               : snapshot.data!.docs
-              .where((element) =>
-          (element['email'].toString() != currentEmail) &&
-              (element['email'].toString().contains(widget.search!) ||
-                  element['name'].toString().contains(widget.search!)))
-              .toList();
+                  .where((element) =>
+                      (element['email'].toLowerCase() != currentEmail) &&
+                      (element['email'].toLowerCase().contains(widget.search!) ||
+                          element['name'].toLowerCase().contains(widget.search!)))
+                  .toList();
 
           return snapshot.hasData
-              ? ListView.builder(
-            scrollDirection: Axis.vertical,
-            itemCount: data.length,
-            itemBuilder: (context, index) {
+              ? (Provider.of<GroupMember>(context).member.length != data.length
+                  ? ListView.builder(
+                      scrollDirection: Axis.vertical,
+                      itemCount: data.length,
+                      itemBuilder: (context, index) {
+                        var user = UserModel(
+                            id: snapshot.data!.docs[index].id,
+                            name: data[index]['name'],
+                            profile: data[index]['image_profile'],
+                            email: data[index]['email'],
+                            status: data[index]['status']);
 
-              user = UserModel(
-                  id: snapshot.data!.docs[index].id,
-                  name: data[index]['name'],
-                  profile: data[index]['image_profile'],
-                  email: data[index]['email'],
-                  status: data[index]['status']
-              );
-
-              if (!(Provider.of<GroupMember>(context).member.containsKey(snapshot.data!.docs[index].id))) {
-                print(Provider.of<GroupMember>(context).member);
-                return Card(
-                    elevation: 0,
-                    color: Colors.white.withOpacity(0.1),
-                    clipBehavior: Clip.antiAlias,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20)),
-                    child: Padding(
-                      padding: const EdgeInsets.all(10),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          ImageStatus(
-                            status: user.status!,
-                            imageUrl: user.profile!,
-                          ),
-                          const SizedBox(
-                            width: 10,
-                          ),
-                          Expanded(
-                            flex: 2,
-                            child: CustomText(
-                              overflow: TextOverflow.fade,
-                              text: user.name!,
-                              bold: true,
-                              size: 14,
-                            ),
-                          ),
-                          CustomButton(
-                            text: 'Add +',
-                            size: 10,
-                            onClick: () {
-                              Provider.of<GroupMember>(context,
-                                  listen: false)
-                                  .addMember(snapshot.data!.docs[index].id, user);
-                            },
-                          )
-                        ],
+                        if (!(Provider.of<GroupMember>(context).memberId.contains(user.id))) {
+                          return Card(
+                              elevation: 0,
+                              color: Colors.white.withOpacity(0.1),
+                              clipBehavior: Clip.antiAlias,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20)),
+                              child: Padding(
+                                padding: const EdgeInsets.all(10),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    ImageStatus(
+                                      status: user.status!,
+                                      imageUrl: user.profile!,
+                                    ),
+                                    const SizedBox(
+                                      width: 10,
+                                    ),
+                                    Expanded(
+                                      flex: 2,
+                                      child: CustomText(
+                                        overflow: TextOverflow.fade,
+                                        text: user.name!,
+                                        bold: true,
+                                        size: 14,
+                                      ),
+                                    ),
+                                    CustomButton(
+                                      text: 'Add +',
+                                      size: 10,
+                                      onClick: () {
+                                        Provider.of<GroupMember>(context,
+                                                listen: false)
+                                            .addMember(user);
+                                      },
+                                    )
+                                  ],
+                                ),
+                              ));
+                        }
+                        return listOfUser;
+                      },
+                    )
+                  : const Center(
+                      child: CustomText(
+                        text: 'All user is already a Member',
                       ),
-                    ));
-              }
-              else {
-                print(Provider.of<GroupMember>(context).member);
-              }
-
-              return listOfUser;
-            },
-          )
+                    ))
               : const CircularProgressIndicator();
         });
-    ;
   }
 }

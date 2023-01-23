@@ -15,7 +15,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 
 import '../widget/dialog/message_dialog.dart';
-import 'users_page.dart';
+import 'message/users_page.dart';
 import '../const/color.dart';
 
 class MainPage extends StatefulWidget {
