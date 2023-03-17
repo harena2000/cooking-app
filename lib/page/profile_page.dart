@@ -1,6 +1,5 @@
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:cooking_app/builder/user_profile_builder.dart';
 import 'package:cooking_app/page/main_page.dart';
 import 'package:cooking_app/service/cloud_storage_service.dart';
 import 'package:cooking_app/widget/button/custom_outlined_button.dart';
@@ -10,7 +9,6 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
-import 'package:permission_handler/permission_handler.dart';
 
 import '../const/color.dart';
 import '../widget/text/custom_text.dart';
@@ -174,8 +172,7 @@ class _ProfilePageState extends State<ProfilePage> {
                             color: Colors.white,
                             clipBehavior: Clip.antiAlias,
                             shape: RoundedRectangleBorder(
-                                borderRadius:
-                                BorderRadius.circular(100),
+                                borderRadius: BorderRadius.circular(100),
                                 side: const BorderSide(width: 0)),
                             child: const CircularProgressIndicator(),
                           ),
@@ -184,19 +181,23 @@ class _ProfilePageState extends State<ProfilePage> {
 
                       return Container();
                     }),
-                imageFromFile != null ? CustomOutlinedButton(
-                  text: "Modifier",
-                  onClick: () {
-                    setState(() {
-                      isLoading = true;
-                      imageFromFile == null;
-                    });
-                    storage
-                        .uploadFile(imageFromFile.path, _auth.currentUser!.uid,
-                            imageFromFile.name)
-                        .then((value) => setState(() { isLoading = false;}));
-                  },
-                ) : Container(),
+                imageFromFile != null
+                    ? CustomOutlinedButton(
+                        text: "Modifier",
+                        onClick: () {
+                          setState(() {
+                            isLoading = true;
+                            imageFromFile == null;
+                          });
+                          storage
+                              .uploadFile(imageFromFile.path,
+                                  _auth.currentUser!.uid, imageFromFile.name)
+                              .then((value) => setState(() {
+                                    isLoading = false;
+                                  }));
+                        },
+                      )
+                    : Container(),
               ],
             ),
           ),

@@ -46,7 +46,6 @@ class _RegistrationPageState extends State<RegistrationPage> {
 
   final _formKey = GlobalKey<FormState>();
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -86,8 +85,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                     children: [
                       Form(
                           key: _formKey,
-                          autovalidateMode:
-                              AutovalidateMode.onUserInteraction,
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
                           child: Column(
                             children: [
                               CustomTextField(
@@ -96,8 +94,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                                 inputType: TextInputType.text,
                                 hintText: "Full name",
                                 icon: FontAwesomeIcons.user,
-                                backgroundColor:
-                                AppColor.grey.withOpacity(0.1),
+                                backgroundColor: AppColor.grey.withOpacity(0.1),
                                 onExit: isExit,
                                 validator: (value) {
                                   if (value == null || value.isEmpty) {
@@ -118,14 +115,12 @@ class _RegistrationPageState extends State<RegistrationPage> {
                                 inputType: TextInputType.emailAddress,
                                 hintText: "Email Address",
                                 icon: FontAwesomeIcons.envelope,
-                                backgroundColor:
-                                    AppColor.grey.withOpacity(0.1),
+                                backgroundColor: AppColor.grey.withOpacity(0.1),
                                 onExit: isExit,
                                 validator: (value) {
                                   if (value == null || value.isEmpty) {
                                     return "This case can't be empty (required*)";
-                                  } else if (!EmailValidator.validate(
-                                      value)) {
+                                  } else if (!EmailValidator.validate(value)) {
                                     return 'Your email is not validate';
                                   }
                                   return null;
@@ -142,8 +137,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                                 icon: FontAwesomeIcons.unlockKeyhole,
                                 obscureText: true,
                                 onExit: isExit,
-                                backgroundColor:
-                                    AppColor.grey.withOpacity(0.1),
+                                backgroundColor: AppColor.grey.withOpacity(0.1),
                                 validator: (value) {
                                   if (value != null && value.length < 7) {
                                     return 'Enter min. 7 characters';
@@ -160,8 +154,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                                 textColor: Colors.white,
                                 hintText: "Password confirmation",
                                 icon: FontAwesomeIcons.lock,
-                                backgroundColor:
-                                    AppColor.grey.withOpacity(0.1),
+                                backgroundColor: AppColor.grey.withOpacity(0.1),
                                 obscureText: true,
                                 onExit: isExit,
                                 validator: (value) {
@@ -191,21 +184,21 @@ class _RegistrationPageState extends State<RegistrationPage> {
                                   setState(() {
                                     isLoading = true;
                                   });
-                                  createAccount(name, email, password).then((user) {
+                                  createAccount(name, email, password)
+                                      .then((user) {
                                     if (user != null) {
                                       showDialog(
                                           barrierDismissible: false,
                                           context: context,
                                           builder: (context) =>
-                                          const MessageDialog(
-                                            text:
-                                            "User has been register !",
-                                            color: Colors.green,
-                                            changeScreen: true,
-                                            redirectTo: MainPage(),
-                                          ));
-                                    }
-                                    else {
+                                              const MessageDialog(
+                                                text:
+                                                    "User has been register !",
+                                                color: Colors.green,
+                                                changeScreen: true,
+                                                redirectTo: MainPage(),
+                                              ));
+                                    } else {
                                       setState(() {
                                         isLoading = false;
                                       });
@@ -213,12 +206,10 @@ class _RegistrationPageState extends State<RegistrationPage> {
                                           barrierDismissible: false,
                                           context: context,
                                           builder: (context) =>
-                                          const MessageDialog(
-                                            text:
-                                            "Error to register !",
-                                            color: Colors.red,
-                                            changeScreen: false
-                                          ));
+                                              const MessageDialog(
+                                                  text: "Error to register !",
+                                                  color: Colors.red,
+                                                  changeScreen: false));
                                     }
                                   });
                                 }

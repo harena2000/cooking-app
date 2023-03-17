@@ -12,8 +12,6 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
-import '../../builder/contact_builder.dart';
-import '../../builder/users_builder.dart';
 import '../../const/color.dart';
 import '../message/image_status.dart';
 import '../text_field/custom_text_field.dart';

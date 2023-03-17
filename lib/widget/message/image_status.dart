@@ -25,7 +25,7 @@ class ImageStatus extends StatelessWidget {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(50),
             color: AppColor.orange,
-            border: Border.all(color: AppColor.darkBlue, strokeAlign: StrokeAlign.outside, width: 4)
+            border: Border.all(color: AppColor.darkBlue, strokeAlign: BorderSide.strokeAlignOutside, width: 4)
           ),
         ) : Container()
       ],
