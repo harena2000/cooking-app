@@ -1,16 +1,44 @@
-# cooking_app
 
-A new Flutter project.
+# Cooking App
 
-## Getting Started
+This project is about list of recipe from the api and have a search feature, chat système.
 
-This project is a starting point for a Flutter application.
+# API
 
-A few resources to get you started if this is your first Flutter project:
+To check all end point on the api, check https://www.themealdb.com/api.php.
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+# Requirement
+To run this project, your dart SDK need to be updated on the last version. sdk: '>=2.19.1 <3.0.0'
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+To check your Flutter SDK version, tap the following command :
+```bash
+  flutter --version 
+```
+```bash
+  flutter --version 
+    Flutter 3.7.7 • channel stable • https://github.com/flutter/flutter.git
+    Framework • revision 2ad6cd72c0 (11 days ago) • 2023-03-08 09:41:59 -0800
+    Engine • revision 1837b5be5f
+    Tools • Dart 2.19.4 • DevTools 2.20.1 
+```
+
+To upgrade your Flutter SDK version, tap the following command :
+```bash
+  flutter upgrade 
+```
+## Installation
+
+```bash
+  flutter pub get
+```
+    
+## Build the project
+
+To build this project, tap the following command :
+
+```bash
+  flutter run
+  or
+  flutter run --no-sound-null-safety
+```
+
